@@ -4,7 +4,9 @@ const db = knex(config.development);
 
 module.exports = {
   add,
-  findAllWorkouts
+  findAllWorkouts,
+  findById,
+  remove
 };
 
 async function add(workout) {
@@ -15,4 +17,16 @@ async function add(workout) {
 
 function findAllWorkouts() {
   return db('workouts');
-}
+};
+
+function findById(id) {
+  return db('workouts')
+    .where({ id }) // because table name is same as this func input param
+    .first();
+};
+
+function remove(id) {
+  return db('workouts')
+    .where({ id })
+    .del();
+};

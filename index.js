@@ -31,6 +31,38 @@ server.get('/api/workouts', (req, res) => {
     });
 });
 
+server.get('/api/workouts/:id', (req, res) => {
+  const { id } = req.params;
+
+  Workouts.findById(id)
+    .then(workout => {
+      if (workout) {
+        res.status(200).json(workout);
+      } else {
+        res.status(404).json({ message: "Workout with id not found."});
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ message: "Error in find workout by id" });
+    });
+});
+
+server.delete('/api/workouts/:id', (req, res) => {
+  const { id } = req.params;
+
+  Workouts.remove(id)
+    .then(count => {
+      if (count > 0) {
+        res.status(200).json({ message: "Workout deleted."});
+      } else {
+        res.status(404).json({ message: "Workout with id not found."});
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ message: "Error in deleting workout with id" });
+    });
+});
+
 server.listen(PORT, () => {
   console.log(`\n*** Server running on port ${PORT} ***\n`);
 });
