@@ -12,7 +12,7 @@ server.get('/', (req, res) => {
 });
 
 server.post('/api/workouts', (req, res) => {
-  Workouts.add(req.body)
+  Workouts.addWorkout(req.body)
     .then(workout => {
       res.status(200).json(workout);
     })
@@ -34,7 +34,7 @@ server.get('/api/workouts', (req, res) => {
 server.get('/api/workouts/:id', (req, res) => {
   const { id } = req.params;
 
-  Workouts.findById(id)
+  Workouts.findWorkoutById(id)
     .then(workout => {
       if (workout) {
         res.status(200).json(workout);
@@ -78,6 +78,39 @@ server.patch('/api/workouts/:id', (req, res) => {
     .catch(error => {
       res.status(500).json({ message: "Error updating workout."});
     });
+});
+
+server.post("/api/workouts/:id/exercises", (req, res) => {
+  const { id } = req.params;
+  const exercise = req.body;
+
+  if (!exercise.workout_id) {
+    exercise['workout_id'] = parseInt(id, 10)
+  }
+
+  Workouts.findWorkoutById(id)
+    .then(workout => {
+      if (!workout) {
+        res.status(404).json({ messge: "Invalid workout id."})
+      }
+      // Check for all required fields
+      if (!exercise.name || !exercise.weight_lifted || !exercise.reps) {
+        res.status(400).json({ message: "Must providee name, weight lifted, and reps."})
+      }
+      // Now ready to add exercise
+      Workouts.addExercise(exercise, id)
+        .then(exercise => {
+          if (exercise) {
+            res.status(200).json(exercise);
+          }
+        })
+        .catch(error => {
+          res.status(500).json({ message: "Failed to add exercise."})
+        })
+    })
+    .catch(error => {
+      res.status(500).json({ message: "Error finding workout."})
+    })
 });
 
 server.listen(PORT, () => {

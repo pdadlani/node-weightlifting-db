@@ -3,14 +3,16 @@ const config = require('../knexfile');
 const db = knex(config.development);
 
 module.exports = {
-  add,
+  addWorkout,
   findAllWorkouts,
-  findById,
+  findWorkoutById,
   remove,
-  update
+  update,
+  addExercise,
+  findExerciseById
 };
 
-async function add(workout) {
+async function addWorkout(workout) {
   const [id] = await db('workouts').insert(workout);
 
   return id;
@@ -20,7 +22,7 @@ function findAllWorkouts() {
   return db('workouts');
 };
 
-function findById(id) {
+function findWorkoutById(id) {
   return db('workouts')
     .where({ id }) // because table name is same as this func input param
     .first();
@@ -37,6 +39,18 @@ function update(id, changes) {
     .where({ id })
     .update(changes, [id])
     .then(() => {
-      return findById(id);
+      return findWorkoutById(id);
     })
+}
+function findExerciseById(id) {
+  return db("exercises")
+    .where({ id })
+    .first();
+}
+
+async function addExercise(exercise, workout_id) {
+  const [id] = await db("exercises")
+    .where({ workout_id })
+    .insert(exercise);
+  return findExerciseById(id);
 }
