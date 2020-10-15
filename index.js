@@ -5,7 +5,7 @@ const server = express();
 
 server.use(express.json());
 
-const PORT = 5000;
+const PORT = 5001;
 
 server.get('/', (req, res) => {
   res.json({ message: "HIIIIIIIIII" });
@@ -60,6 +60,23 @@ server.delete('/api/workouts/:id', (req, res) => {
     })
     .catch(error => {
       res.status(500).json({ message: "Error in deleting workout with id" });
+    });
+});
+
+server.patch('/api/workouts/:id', (req, res) => {
+  const { id } = req.params
+  const changes = req.body
+
+  Workouts.update(id, changes)
+    .then(workout => {
+      if (workout) {
+        res.status(200).json(workout)
+      } else {
+        res.status(404).json({ message: 'Workout not found.'})
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ message: "Error updating workout."});
     });
 });
 

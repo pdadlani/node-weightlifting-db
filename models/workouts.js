@@ -6,7 +6,8 @@ module.exports = {
   add,
   findAllWorkouts,
   findById,
-  remove
+  remove,
+  update
 };
 
 async function add(workout) {
@@ -30,3 +31,12 @@ function remove(id) {
     .where({ id })
     .del();
 };
+
+function update(id, changes) {
+  return db('workouts')
+    .where({ id })
+    .update(changes, [id])
+    .then(() => {
+      return findById(id);
+    })
+}
