@@ -17,6 +17,7 @@ exports.up = function(knex) {
     // foreign key to workouts table
     tbl.integer('workout_id')
       .unsigned()
+      .notNullable()
       .references('id')
       .inTable('workouts')
       .onDelete('CASCADE')
