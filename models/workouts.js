@@ -9,7 +9,9 @@ module.exports = {
   remove,
   update,
   addExercise,
-  findExerciseById
+  findExerciseById,
+  findExerciseByWorkoutId,
+  removeExercise
 };
 
 async function addWorkout(workout) {
@@ -42,6 +44,7 @@ function update(id, changes) {
       return findWorkoutById(id);
     })
 }
+
 function findExerciseById(id) {
   return db("exercises")
     .where({ id })
@@ -53,4 +56,25 @@ async function addExercise(exercise, workout_id) {
     .where({ workout_id })
     .insert(exercise);
   return findExerciseById(id);
+}
+
+function findExerciseByWorkoutId(workout_id) {
+  return db("workouts")
+    .join("exercises", "workouts.id", "exercises.workout_id")
+    .select(
+      "workouts.id as workout_id",
+      "workouts.name as workout_name",
+      "exercises.id as exercise_id",
+      "exercises.name as exercise_name",
+      "exercises.weight_lifted as weight_lifted",
+      "exercises.reps as reps",
+      "exercises.exercise_region as exercise_region"
+    )
+    .where({ workout_id })
+}
+
+function removeExercise(id) {
+  return db("exercises")
+    .where({ id })
+    .del();
 }

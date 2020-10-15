@@ -113,6 +113,34 @@ server.post("/api/workouts/:id/exercises", (req, res) => {
     })
 });
 
+server.get('/api/workouts/:id/exercises', (req, res) => {
+  const { id } = req.params;
+
+  Workouts.findExerciseByWorkoutId(id)
+    .then(workouts => {
+      res.status(200).json(workouts)
+    })
+    .catch(error => {
+      res.status(500).json({ message: "Cannot find Exercises for that workout."})
+    })
+});
+
+server.delete('/api/exercises/:id', (req, res) => {
+  const { id } = req.params
+
+  Workouts.removeExercise(id)
+    .then(count => {
+      if (count > 0) {
+        res.status(200).json({ message: `Exercise with id ${id} was deleted.`})
+      } else {
+        res.status(404).json({ message: "No exercise at that location."})
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ message: "Error deleting exercise."})
+    })
+})
+
 server.listen(PORT, () => {
   console.log(`\n*** Server running on port ${PORT} ***\n`);
 });
