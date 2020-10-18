@@ -17,9 +17,10 @@ module.exports = {
 };
 
 async function addWorkout(workout) {
-  const [id] = await db('workouts').insert(workout);
+  return await db('workouts').insert(workout, ['id', 'name'])
+  // const [id] = await db('workouts').insert(workout);
 
-  return id;
+  // return findWorkoutById(id);
 };
 
 function findAllWorkouts() {
@@ -54,10 +55,13 @@ function findExerciseById(id) {
 }
 
 async function addExercise(exercise, workout_id) {
-  const [id] = await db("exercises")
+  return await db('exercises')
     .where({ workout_id })
-    .insert(exercise);
-  return findExerciseById(id);
+    .insert(exercise, ['id', 'name'])
+  // const [id] = await db("exercises")
+  //   .where({ workout_id })
+  //   .insert(exercise);
+  // return findExerciseById(id);
 }
 
 function findExerciseByWorkoutId(workout_id) {
