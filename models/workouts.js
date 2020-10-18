@@ -57,7 +57,7 @@ function findExerciseById(id) {
 async function addExercise(exercise, workout_id) {
   return await db('exercises')
     .where({ workout_id })
-    .insert(exercise, ['id', 'name'])
+    .insert(exercise, ['id', 'name', 'weight_lifted', 'reps', 'exercise_region'])
   // const [id] = await db("exercises")
   //   .where({ workout_id })
   //   .insert(exercise);
