@@ -13,8 +13,23 @@ module.exports = {
   addExercise,
   findExerciseById,
   findExerciseByWorkoutId,
-  removeExercise
+  removeExercise,
+  addUser,
+  findAllUsers,
+  findUserByUsername
 };
+
+async function addUser(user) {
+  return await db('users').insert(user, ['id', 'username']);
+}
+
+function findAllUsers() {
+  return db('users');
+}
+
+function findUserByUsername(username) {
+  return db('users').where({ username }).first();
+}
 
 async function addWorkout(workout) {
   return await db('workouts').insert(workout, ['id', 'name'])
