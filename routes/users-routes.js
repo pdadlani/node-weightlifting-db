@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
     })
     .catch(error => {
       res.status(500).json({ message: "Unable to retrieve users."})
-    })
-})
+    });
+});
 
 router.get('/:username', (req, res) => {
   const { username } = req.params;
@@ -22,7 +22,7 @@ router.get('/:username', (req, res) => {
     })
     .catch(error => {
       res.status(500).json({ message: "No user with that username."})
-    })
-})
+    });
+});
 
 module.exports = router;
